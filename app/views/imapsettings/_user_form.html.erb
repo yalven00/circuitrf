@@ -1,0 +1,38 @@
+<%= form_for @user, :html => { :class => 'form-horizontal center' } do |f| %>
+  <%#= f.error_notification %>
+  <% if @user.errors.any? %>
+    <div id="errorExplanation" class="alert alert-danger">
+      <a class="close" data-dismiss="alert">&#215;</a>
+      <h4><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h4>
+      <ul>
+      <% @user.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="form-group">
+    <%= f.label "User name", :class => 'col-md-4 control-label' %>
+    <div class="col-md-6">
+      <%= f.text_field :name, class: "form-control" %>
+    </div>
+  </div> 
+  <div class="form-group">
+    <%= f.label "Email", :class => 'col-md-4 control-label' %>
+    <div class="col-md-6">
+      <%= f.text_field :email, class: "form-control" %>
+    </div>
+  </div> 
+  <div class="form-group">
+      <%= f.label "Company", :class => 'col-md-4 control-label' %>
+    <div class="col-md-6">
+      <%= f.text_field :company , class: "form-control"%>
+    </div>
+  </div>
+ 
+    <div class="form-group">
+    <div class="col-sm-offset-4 col-sm-2">
+      <%= f.submit "Save",:class => 'btn btn-primary' %>
+    </div>
+  </div>
+<% end %>

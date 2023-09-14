@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  contacts: 1
+  sequence: 1
+  monthly_emails: 1
+  price: 1
+
+two:
+  name: MyString
+  contacts: 1
+  sequence: 1
+  monthly_emails: 1
+  price: 1

@@ -1,0 +1,40 @@
+<%- model_class = Sequence -%>
+<!-- <div class="alert alert-info">
+  <h3><%#=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h3>
+</div> -->
+<% if @sequences.first.present? %>
+	<div class="panel panel-success">
+		<div class="panel-heading"><strong>Sequences</strong></div>
+		<div class="panel-body">
+			<table class="table table-striped">
+			  <thead style="background-color: lightgrey;">
+			    <tr>
+			      <th>Name</th>
+			      <th># of Steps</th>
+			      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			    <% @sequences.each do |sequence| %>
+			      <tr>
+			        <!-- <td><%#= link_to author_book.id, author_book_path(author_book) %></td> -->
+			        <td><%= sequence.name %></td>
+			        <td><%= sequence.steps.count.to_s + ' ' || "0" + ' ' %>Steps</td>
+			        <td>
+				        <%= link_to 'Edit',edit_sequence_path(sequence), :class => 'btn btn-primary btn-xs' %>
+				        <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+				                        sequence_path(sequence),
+				                        :method => :delete,
+				                        :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+				                        :class => 'btn btn-xs btn-danger' %>
+			        </td>
+			      </tr>
+			    <% end %>
+		  	  </tbody>
+			</table>
+		</div>
+	</div>
+<% else %>
+  <div class="alert alert-info">No Sequences available.</div>
+<% end %>
+<%= link_to 'Add sequence', new_sequence_path, :class => 'btn btn-primary' %>

@@ -1,0 +1,100 @@
+<script type="text/javascript">
+	$(document).ready(function(){
+		$(".add-to-seq").click(function(){
+			$("#two-stage").removeClass("hidden");
+			$(this).addClass("hidden");
+		});
+
+		// $("select#contact_sequence_id").change(function(){
+		// 	var seq_id = $("#contact_sequence_id").val()
+		// 	$.ajax({
+  //             type: 'get',
+  //             url: '/sequencememberships/get_step',
+  //             dataType: 'json',
+  //             data: {
+  //               'id' : seq_id
+  //             },
+  //             success: function (data) {
+				
+		// 		$("select#contact_step_id option").remove();
+  //               //put in a empty default line
+  //               var row = "<option value=\"" + "" + "\">" + "Select Step" + "</option>";
+  //               $(row).appendTo("select#contact_step_id");                       
+  //               // Fill sub category select 
+                
+  //               $.each(data, function(i, j){
+  //               	// for(i=0; i< data.length; i++){
+  //               	   $.ajax({
+		// 	              type: 'get',
+		// 	              async: false,
+		// 	              url: '/sequencememberships/get_email',
+		// 	              dataType: 'json',
+		// 	              data: {
+		// 	                'id' : j.id
+		// 	              },
+		// 	              success: function (email_data) {
+		// 	              	 row = "<option value=\"" + j.id + "\">" + j.step_number+"-" +email_data.subject + "</option>";
+		// 	              	 // alert(row);   
+  //                   		 $(row).appendTo("select#contact_step_id");
+		// 	                }
+		// 	            });
+  //               	// }
+  //               });
+  //               $("#step-id").removeClass("hidden");
+  //             }
+  //           });
+		// });
+
+		 $("select#contact_sequence_id").change(function()
+		 {
+			var seq_id = $("#contact_sequence_id").val()
+			if(seq_id !='')
+			{
+				$.ajax({
+	              type: 'get',
+	              url: '/sequencememberships/get_step',
+	              dataType: 'json',
+	              data: {
+	                'id' : seq_id
+	              },
+	              success: function (data) {
+					$("#step-id").removeClass("hidden");
+					$("select#contact_step_id option").remove();
+	                //put in a empty default line
+	                var row = "<option value=\"" + "" + "\">" + "Select Step" + "</option>";
+	                $(row).appendTo("select#contact_step_id");                       
+
+	                $.each(data, function(i, j){
+		                row = "<option value=\"" + j.id + "\">" + j.step_number+"-" + j.email_subject + "</option>";   
+		                $(row).appendTo("select#contact_step_id");
+	                });
+	              }
+	            });
+	        }
+	        else
+	        {
+	        	$("#step-id").addClass("hidden");
+	        	// $(".submit-button").addClass("hidden");
+	        }
+		});
+		$("select#contact_step_id").change(function(){
+			$(".submit-button").removeClass("hidden");
+		});
+	});
+</script>
+<!-- 
+<div class="span6">
+	<h3>Contact Info</h3>
+	<%#= render 'form' %>
+</div> -->
+<div class="panel panel-success">
+	<div class="panel-heading">Contact Info</div>
+	<div class="panel-body">
+		<%= render 'form' %>
+	</div>
+</div>
+
+<!-- <div  id="add-seq-membership">
+  <%#= render "ser-membership"%>
+</div> -->
+

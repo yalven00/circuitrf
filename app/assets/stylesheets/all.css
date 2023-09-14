@@ -1,0 +1,74 @@
+.well {
+	text-align: center;
+}
+
+ .login-form {
+    padding-left: 12% !important;
+    padding-top: 50px;
+}
+
+.btn {
+	margin-left: 0%;
+}
+
+.control-group > input {
+    margin: 0 5px 0 0;
+}
+
+.nav.add {
+    float: right !important;
+}
+
+
+.dropdown-menu .sub-menu {
+    left: 100%;
+    position: absolute;
+    top: 0;
+    visibility: hidden;
+    margin-top: -1px;
+}
+
+.dropdown-menu li:hover .sub-menu {
+    visibility: visible;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+.dropdown-menu{ margin: 0 !important;}
+
+.form-horizontal .controls {
+    margin-left: 36px !important ;
+    float: left;
+}
+
+.form-horizontal .control-label {
+    float: left  !important;
+    padding-top: 5px  !important;
+    text-align: left  !important;
+}
+
+ @media only screen and (max-width:1200px) { 
+    .navbar .btn-navbar {
+        display: none !important;
+    }
+       
+ }
+@media only screen and (max-width:768px) { 
+     .hidden-contact{  display:none !important;    }
+ 	#contacts_filter label { text-align: center;}
+ 	
+
+	.navbar .nav > li > a {padding:10px 6% !important;}
+
+ 
+ }
+ @media only screen and (max-width:500px) { 
+
+    .navbar .nav > li > a {padding:10px 3% !important;}
+
+ 
+ }
+
+
+

@@ -1,0 +1,140 @@
+<script type="text/javascript">
+  $(document).ready(function(){
+      // $('#step_delay').change(function(){
+      //   var reg = /^\d+$/;
+      //   var delay = $('#step_delay').val();
+      //   if(delay !='')
+      //   {
+      //     if(!reg.test(delay))
+      //     { 
+      //       $(".delay_error").parents('.control-group').addClass('error');
+      //       $(".delay_error").text("Numeric only");
+      //       $(".submit-sequence-step").addClass("disabled");
+      //     }
+      //     else
+      //     {
+      //       $(".delay_error").parents('.control-group').removeClass('error');
+      //       $(".delay_error").text("");
+      //       $(".submit-sequence-step").removeClass("disabled");
+      //     }
+      //   }else{
+      //     $(".submit-sequence-step").addClass("disabled");
+      //   }
+
+      // });
+
+    $("[name='step[send_option]']").bootstrapSwitch('state', true);
+    $("[name='step[complete_toggle]']").bootstrapSwitch('state', false);
+
+    $("[name='step[complete_toggle]']").on('switchChange.bootstrapSwitch', function(event, state) {
+      $("#complete_toggle").val(state.value);
+      // console.log(state.value);
+    });
+
+    $("[name='step[send_option]']").on('switchChange.bootstrapSwitch', function(event, state) {
+      $("#option_toggle").val(state.value);
+      console.log(state.value);
+      if(state.value == false)
+      {
+       $(".delay-dropdown").removeClass("hidden");
+      }
+      else
+      {
+        $(".delay-dropdown").addClass("hidden");
+      }
+    });
+  }); 
+</script>
+ <%= hidden_field_tag :sequence_id, @sequence.id || "" %>
+ <%= hidden_field_tag :step_id,"" %>
+ <%= hidden_field_tag :sequence_membership_status, @sequence_membership_present %>
+ 
+
+<%= form_for @step = Step.new, :html => { :class => 'form-horizontal center' } do |f| %>
+  <%#= f.error_notification %>
+  <% if @step.errors.any? %>
+    <div id="errorExplanation" class="alert alert-danger">
+      <a class="close" data-dismiss="alert">&#215;</a>
+      <h4><%= pluralize(@step.errors.count, "error") %> prohibited this sequence from being saved:</h4>
+      <ul>
+      <% @step.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+   
+  <!-- <div class="control-group"> -->
+    <%#= f.label "Delay", :class => 'control-label' %>
+    <!-- <div class="controls"> -->
+      <%#= f.text_field :delay, :placeholder=>"number of days" %><br/>
+      <!-- <span class="delay_error help-inline error-float" style="margin-left:-140px;"></span> -->
+    <!-- </div> -->
+
+   <!--  <div class="control-group">
+      <input class="" id="option_toggle" name="send_option" type="checkbox" data-on-text="Send now" data-off-text="Schedule">Send immediately?
+    </div> -->
+    <%# if @sequence.new_record? %>
+    <div class="form-group send_immediately">
+      <%= f.label "Send immediately?", :class => 'col-md-4 control-label' %>
+      <div class="col-md-2">
+        <input class="" id="option_toggle" name="step[send_option]" type="checkbox" data-on-text="Yes" data-off-text="No" value='true'>
+      </div>
+    </div>
+    <%# end %>
+<br/>
+  <div class="form-group hidden delay-dropdown">
+    <%= f.label "Delay", :class => 'col-md-4 control-label' %>
+    <div class="col-md-2">
+      <%= f.select :delay ,options_for_select(GlobalConstants::DAYS.collect {|d| [d, GlobalConstants::DAYS.index(d+1)]}),prompt: "Select delay", :class=>'select-sequence' %><br/><br/>
+      <%= f.select :schedule ,options_for_select(GlobalConstants::OPTIONS.collect {|d| [d, GlobalConstants::OPTIONS.index(d)]}),prompt: "Select schedule", :class=>'form-control select-sequence' %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= f.label "Subject", :class => 'col-md-4 control-label' %>
+    <div class="col-md-6">
+      <%= f.text_field :subject, :placeholder=>"email subject", :class=>"form-control" %>
+    </div>
+    <div>
+      <button id='merge_button' type="button" class="btn btn-default btn-info" data-container="body" data-toggle="popover"   data-placement="right" data-content="The following merge fields can be added to the subject and body of your email:<br/>
+          {{first_name}}<br/>
+          {{last_name}}<br/>
+          {{primary_email}}<br/>
+          {{company}}<br/>
+          {{website}}<br/>
+          {{email2}}<br/>
+          {{email3}}<br/>
+          {{email4}}<br/>
+          {{custom1}}<br/>
+          {{custom2}}<br/>
+          {{custom3}}">
+          Merge Info
+      </button>
+
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label "Body", :class => 'col-md-4 control-label' %>
+    <div class="col-md-7">
+      <!-- <textarea class="ckeditor" name="step[body]" id="editor1"></textarea> -->
+      <%#= f.cktext_area :body, :ckeditor => {:toolbar => 'mini'} %>
+       <%= f.text_area :body,:style=>"width:100%;" , :class=>"form-control"%>
+    </div>
+  </div>
+  <div class="form-group complete_sequence hidden">
+      <%= f.label "Some of your Contacts have already completed this Sequence, Would you like them to receive this Step?", :class => 'col-md-4 control-label' %>
+      <div class="col-md-4">
+        <input class="form-control" id="complete_toggle" name="step[complete_toggle]" type="checkbox" data-on-text="Yes" data-off-text="No" value='false'>
+      </div>
+  </div>
+    <input type="button" class="btn close-step-form pull-right" value="Cancel" style="margin-left:2%;"/>
+    <%= f.submit "Save" ,:class => 'btn btn-primary pull-right submit-sequence-step' %>
+<% end %>
+
+ <script>
+    // window.wysi = wysihtml5;
+    $('#step_body').wysihtml5();
+    $('#merge_button').popover('toggle')
+    // CKEDITOR.replace( 'step_body' );
+</script>

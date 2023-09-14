@@ -1,0 +1,24 @@
+defaults: &defaults
+  facebook:
+    api_key: "738626869492198"
+    api_secret: "1c65a08266c9c47feced63fd6476e79f"
+
+  google_oauth2:
+    api_key: "321359364071-3h2960afcclv4pr6lfdocn9nk11qp7s2.apps.googleusercontent.com"
+    api_secret: "BhZelfaEiiA4Q0kAmBlTrfc1"
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+
+  facebook:
+    api_key: "237479346448612"
+    api_secret: "db04468c4a410287cc4f20673ddb9c0b"
+
+  google_oauth2:
+    api_key: "321359364071-hp60au2il7mj6nj6f9phup12fok1htts.apps.googleusercontent.com"
+    api_secret: "xd77YiRWaTgN6eiRpQYKVJJb"

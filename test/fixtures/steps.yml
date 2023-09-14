@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  step_number: MyString
+  delay: MyString
+  sequence_id: 1
+
+two:
+  step_number: MyString
+  delay: MyString
+  sequence_id: 1

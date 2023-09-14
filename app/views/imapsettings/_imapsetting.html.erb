@@ -1,0 +1,46 @@
+<%= form_for @imap_setting, :html => { :class => 'form-horizontal center' } do |f| %>
+  <%#= f.error_notification %>
+  <% if @imap_setting.errors.any? %>
+    <div id="errorExplanation" class="alert alert-danger">
+      <a class="close" data-dismiss="alert">&#215;</a>
+      <h4><%= pluralize(@imap_setting.errors.count, "error") %> prohibited this imapsetting from being saved:</h4>
+      <ul>
+      <% @imap_setting.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="form-group">
+    <%= f.label "User name", class: "col-md-4 control-label" %>
+    <div class="col-md-6">
+      <%= f.text_field :username, :placeholder=>"your name", class: "form-control" %>
+    </div>
+  </div> 
+  <div class="form-group">
+    <%= f.label "Email", :class => 'col-md-4 control-label' %>
+    <div class="col-md-6">
+      <%= f.text_field :email, :placeholder=>"example@example.com", class: "form-control" %>
+    </div>
+  </div> 
+  <div class="form-group">
+      <%= f.label "Password", :class => 'col-md-4 control-label' %>
+    <div class="col-md-6">
+      <%= f.password_field :password , class: "form-control"%>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label "Server", :class => 'col-md-4 control-label' %>
+    <div class="col-md-6">
+      <%= f.text_field :server, :placeholder=>"imap.gmail.com", class: "form-control" %>
+    </div>
+  </div> 
+  <!-- <div class="form-actions">
+    <%#= f.submit "Save",:class => 'btn btn-primary' %>
+  </div> -->
+  <div class="form-group">
+    <div class="col-sm-offset-4 col-sm-2">
+      <%= f.submit "Save",:class => 'btn btn-primary' %>
+    </div>
+  </div>
+<% end %>

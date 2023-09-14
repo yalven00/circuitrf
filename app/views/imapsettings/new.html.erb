@@ -1,0 +1,135 @@
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".change-api").click(function () {
+            $("#setting-api").removeClass('hidden');
+        });
+        $("#close-form").click(function () {
+            $("#setting-api").addClass('hidden');
+        });
+        $(".change-smtp-api").click(function () {
+            $("#setting-smtp").removeClass('hidden');
+        });
+        $("#close-form-smtp").click(function () {
+            $("#setting-smtp").addClass('hidden');
+        });
+        $(".change-user").click(function () {
+            $("#setting-user").removeClass('hidden');
+        });
+        $("#close-user-form").click(function () {
+            $("#setting-user").addClass('hidden');
+        });
+    });
+</script>
+<div class="span6 offset2">
+	<div class="style">
+		<h3>UserInfo</h3>
+	</div>
+	<div class="alert alert-success style">
+		<strong>User Name: </strong><%= @user.name || " "%><br/>
+		<strong>Email: </strong><%= @user.email || " "%><br/>
+		<strong>Company: </strong><%= @user.company || " " %><br/>
+		<!-- <strong>Password:</strong><%#= @user.password || "NILL"%> -->
+		<div class="pull-right">
+		  <a href="javascript:void(0);" class="change-user">change</a>
+		</div>
+		<br/>
+	</div>
+	<div class="panel panel-success style hidden" id="setting-user">
+		<div class="panel-heading">
+			User Info
+			<a href="javascript:void(0)" id="close-user-form" class="pull-right">Close</a>
+		</div>
+		<div class="panel-body">
+			<%= render "user_form"%>
+		</div>
+	</div>
+
+	
+	<% if !@imap_setting.new_record? %>
+		<div class="style">
+			<h3>IMAP Settings</h3>
+		</div>
+		<div class="alert alert-success style">
+			<strong>User Name: </strong><%= @imap_setting.username %><br/>
+			<strong>Email: </strong><%= @imap_setting.email %><br/>
+			<!-- <strong>Password:</strong><%#= @imap_setting.password %><br/> -->
+			<strong>Server: </strong><%= @imap_setting.server %>
+			<div class="pull-right">
+			  <a href="javascript:void(0);" class="change-api">change</a>
+			</div>
+		</div>
+		<!-- <div class="style hidden" id="setting-api"> -->
+		<div class="panel panel-success style hidden" id="setting-api">
+			<div class="panel-heading">
+				IMAP Settings
+				<a href="javascript:void(0)" id="close-form" class="pull-right">Close</a>
+			</div>
+			<div class="panel-body">
+				<%= render "imapsetting"%>
+			</div>
+		</div>
+	<% else %>
+		<div class="panel panel-success style">
+			<div class="panel-heading">IMAP Settings</div>
+			<div class="panel-body">
+				<%= render "imapsetting"%>
+			</div>
+		</div>
+	<% end %>
+
+
+	
+	<% if !@smtp_setting.new_record? %>
+		<div class="style">
+			<h3>SMTP Settings</h3>
+		</div>
+		<div class="alert alert-success style">
+			<strong>User Name: </strong><%= @smtp_setting.username %><br/>
+			<strong>Email: </strong><%= @smtp_setting.email %><br/>
+			<!-- <strong>Password:</strong><%#= @imap_setting.password %><br/> -->
+			<strong>Server: </strong><%= @smtp_setting.server %>
+			<div class="pull-right">
+			  <a href="javascript:void(0);" class="change-smtp-api">change</a>
+			</div>
+		</div>
+		<!-- <div class="well style hidden" id="setting-smtp"> -->
+		<div class="panel panel-success style hidden" id="setting-smtp">
+			<div class="panel-heading">
+				SMTP Settings
+				<a href="javascript:void(0)" id="close-form-smtp" class="pull-right">Close</a>
+			</div>
+			<div class="panel-body">
+				<%= render "smtpsetting"%>
+			</div>
+		</div>
+	<% else %>
+		<div class="panel panel-success style">
+			<div class="panel-heading">SMTP Settings</div>
+			<div class="panel-body">
+				<%= render "smtpsetting"%>
+			</div>
+		</div>
+	<% end %>
+		
+
+	<!-- <div class="style">
+		<h3>SMTP Settings</h3>
+	</div> -->
+	<%# if !@smtp_setting.new_record? %>
+		<!-- <div class="alert alert-success style"> -->
+			<!-- <strong>User Name: </strong><%#= @smtp_setting.username %><br/> -->
+			<!-- <strong>Email: </strong><%#= @smtp_setting.email %><br/> -->
+			<!-- <strong>Password:</strong><%#= @imap_setting.password %><br/> -->
+			<!-- <strong>Server: </strong><%#= @smtp_setting.server %> -->
+			<!-- <div class="pull-right"> -->
+			  <!-- <a href="javascript:void(0);" class="change-smtp-api">change</a> -->
+			<!-- </div> -->
+		<!-- </div> -->
+		<!-- <div class="well style hidden" id="setting-smtp"> -->
+			<!-- <a id="close-form-smtp" class="icon-remove pull-right">x</a> -->
+			 <%#= render "smtpsetting"%>
+		<!-- </div> -->
+	<%# else %>
+	<!-- <div class="well style"><%#= render "smtpsetting"%></div> -->
+	<%# end %>
+</div> <!-- span6 div close  -->

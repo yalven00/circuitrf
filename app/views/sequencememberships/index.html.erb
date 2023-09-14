@@ -1,0 +1,79 @@
+<script type="text/javascript">
+	$(document).ready(function(){
+		$(".add-to-seq").click(function(){
+			$("#two-stage").removeClass("hidden");
+			$(this).addClass("hidden");
+		});
+
+		$("select#sequencemembership_sequence_id").change(function(){
+			var seq_id = $("#sequencemembership_sequence_id").val()
+			$.ajax({
+              type: 'get',
+              url: '/sequencememberships/get_step',
+              dataType: 'json',
+              data: {
+                'id' : seq_id
+              },
+              success: function (data) {
+				$("#step-id").removeClass("hidden");
+				$("select#sequencemembership_step_id option").remove();
+                //put in a empty default line
+                var row = "<option value=\"" + "" + "\">" + "Select Step" + "</option>";
+                $(row).appendTo("select#sequencemembership_step_id");                       
+                // Fill sub category select 
+                $.each(data, function(i, j){
+                	   $.ajax({
+			              type: 'get',
+			              url: '/sequencememberships/get_email',
+			              dataType: 'json',
+			              data: {
+			                'id' : j.id
+			              },
+			              success: function (email_data) {
+
+			              	 row = "<option value=\"" + j.id + "\">" + j.step_number+"-" +email_data.subject + "</option>";   
+                    		 $(row).appendTo("select#sequencemembership_step_id");
+							                  
+			              }
+			        });
+                                        
+                });
+              }
+            });
+		});
+		$("select#sequencemembership_step_id").change(function(){
+			$(".submit-button").removeClass("hidden");
+		});
+	});
+</script>
+
+
+
+<% if @seq_memberships.present? %>
+<div class="seq-membership-table">
+	<%= render "seq-membership.html" %>
+</div>
+<% end %>
+<%= link_to 'Add to sequence', "javascript:void(0)", :class => 'btn btn-primary add-to-seq' %>
+
+<div id="two-stage" class="hidden">
+	<%= form_for @sequence_membership, :html => { :class => 'form-horizontal' } do |f| %>
+		<%= hidden_field_tag :contact_id, params[:id] %>
+		<div id="seq-id">
+	      <%= f.label "Select Sequence:" , :class => 'control-label' %>*
+	        <div class="controls">
+	          <%= f.select :sequence_id ,options_for_select(current_user.account.sequences.map { |sq| ["#{sq.name}", sq.id] }),prompt: "Select Sequence", :class=>'select-sequence' %>
+	        </div>
+	    </div>
+	    <div id="step-id" class="hidden">
+	      <%= f.label "Select Step:" , :class => 'control-label' %>*
+	        <div class="controls">
+	          <%= f.select :step_id ,options_for_select(current_user.account.sequences.map { |sq| ["#{sq.name}", sq.id] }),prompt: "Select Step", :class=>'' %>
+	        </div>
+	    </div>
+	    <br/>
+	    <div class="hidden submit-button" style="margin-left: 30%;">
+	    <%= f.button :submit,:class => 'btn btn-primary' %>
+	    </div>
+	<% end %>
+</div>

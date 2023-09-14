@@ -1,0 +1,250 @@
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('#merge_button').popover('toggle')
+
+		$(".submit-sequence-step").click(function(e){
+		  // var status = $('#sequence_membership_status').val();
+		  // alert(status);
+		  $('.complete_sequence').removeClass('show');
+		  $('.complete_sequence').addClass('hidden');
+		  $('#sequence_membership_status').val('false');
+
+		  var complete_option = $('#complete_toggle').val();
+		  // alert(complete_option);
+	      var id = $("#sequence_id").val();
+	      var subject = $("#step_subject").val();
+	      var delay = $("#step_delay").val();
+	      var type1 = $("#step_schedule").val();
+	      var step_id = $("#step_id").val();
+	      var body = $("#step_body").val();
+	      var option = $("#option_toggle").val();
+	      // alert(option);
+	      // var body =CKEDITOR.instances.step_body.getData();
+	      $this = $(this)
+		  if(subject != '' && body != '')
+	      {
+	      	e.preventDefault();
+	        $.ajax({
+              type: 'get',
+              url: '/steps/add_step',
+              // dataType: 'json',
+              data: {
+                'id' : id,
+                'step_id' : step_id,
+                'subject' : subject,
+                'delay' : delay,
+                'type' : type1,
+                'option' : option,
+                'complete_option' : complete_option,
+                'body' : body
+              },
+              success: function (data) {
+              	var schedule = "";
+              	if(data.schedule == 0)
+              	{
+              		schedule = "-Hours"; 
+              	}
+              	else if(data.schedule == 1)
+              	{
+              		schedule = "-Days";
+              	}
+              	else if(data.schedule == 2)
+              	{
+              		schedule = "-Weeks";
+              	}
+              	else if(data.schedule == 3)
+              	{
+              		schedule = "-Months";
+              	}
+              	else
+              	{
+              		data.delay = "";
+              		schedule = "Send Immediately";
+              	}
+				$(".step-body").append("<tr><td>"+ data.step_number +"</td><td>"+ delay + schedule +"</td><td>"+ subject +'</td><td><a href="javascript:void(0)" class="btn btn-primary btn-mini show-edit-steps-form" id='+data.id+'>Edit</a>' +" " +'<a href="/steps/'+ data.id +'" class="btn btn-danger btn-mini" data-method="delete">Delete</a></td></tr>');
+			   // $("#sequence-id").val('');
+		       $("#step_subject").val('');
+		       $("#step_delay").val('');
+		       $("#step_schedule").val('');
+		       $("#step_body").val('');
+		       // CKEDITOR.instances.step_body.setData();
+		       $(".send_immediately").addClass("hidden");
+		       // $(".send_immediately").val(false);
+		       $(".delay-dropdown").removeClass("hidden");
+		       $(".step-form").addClass("hidden");
+
+              }
+            });
+      	}
+      	else{
+        alert("Please Fill all fields");}
+		});
+
+
+		$(".show-steps-form").click(function(){
+			var status = $('#sequence_membership_status').val();
+		  	if (status == 'true')
+		  	{
+		  		$('.complete_sequence').removeClass('hidden');
+		  		$('.complete_sequence').addClass('show');
+		  	}
+			// $("#sequence-id").val(<%= @sequence.id %>);
+			var id = $("#sequence_id").val();
+			$.ajax({
+              type: 'get',
+              url: '/steps/count_step',
+              dataType: 'script',
+              data: {
+                'id' : id,
+              },
+              success: function (data) {
+              	// alert(data);
+              	if(data == "true")
+              	{
+              		$(".send_immediately").addClass("hidden");
+              		$(".delay-dropdown").removeClass("hidden");
+              	}
+              	else
+              	{
+              		$(".send_immediately").removeClass("hidden");
+              		$(".delay-dropdown").addClass("hidden");
+              	}
+              }
+            });
+			$(".step-form").removeClass("hidden");
+			editor.setValue("", true);
+		});
+
+		$("body").on('click', '.show-edit-steps-form', function(){
+			var id = $(this).attr('id');
+			$.ajax({
+              type: 'get',
+              url: '/steps/get_step',
+              dataType: 'json',
+              data: {
+                'id' :id
+              },
+              success: function (data) {
+              		if(data.step_number == 1)
+	              	{
+	              		$(".send_immediately").removeClass("hidden");
+	              		if(data.delay != 0)
+	              		{
+	              			$("[name='step[send_option]']").bootstrapSwitch('state', false);
+	              			$("#option_toggle").val("false");
+	              			$(".delay-dropdown").removeClass("hidden");
+	              		}
+	              		else
+	              		{
+		              		$(".delay-dropdown").addClass("hidden");
+	              		}
+	              	}
+	              	else
+	              	{
+	              		$(".send_immediately").addClass("hidden");
+	              		$(".delay-dropdown").removeClass("hidden");
+	              	}
+              	  	$.ajax({
+		              type: 'get',
+		              url: '/sequencememberships/get_email',
+		              dataType: 'json',
+		              data: {
+		                'id' : data.id
+		              },
+		            success: function (email_data) {
+              		   $(".step-form").removeClass("hidden");
+				       $("#step_subject").val(email_data.subject);
+				       // alert(email_data.body);
+				       editor.setValue(email_data.body, true);
+				       // $("#step_body").val(''+email_data.body);
+				       // CKEDITOR.instances.step_body.setData(email_data.body);
+				       $("#step_delay").val(data.delay);
+				       $("#step_schedule").val(data.schedule);
+				       $("#sequence_id").val(data.sequence_id);
+				       $("#step_id").val(data.id);
+	              	}
+	            });
+              }
+            });
+		});
+
+		$(".close-step-form").click(function(){
+			$("#step_subject").val('');
+	       // $("#step_body").val(email_data.body);
+	        // CKEDITOR.instances.step_body.setData();
+	        $("#step_delay").val('');
+	        $("#step_schedule").val('');
+	        // $("#sequence_id").val('');
+	        $("#step_id").val('');
+			$(".step-form").addClass("hidden");
+	        // $(".delay_error").parents('.control-group').removeClass('error');
+            // $(".delay_error").text("");
+            // $(".send_immediately").addClass("hidden");
+            // $(".send_immediately").val(false);
+            // $(".submit-sequence-step").removeClass("disabled");
+		});
+	});	
+
+</script>
+<style type="text/css">
+	.style{
+		width:58%;
+		margin-left:17%;
+	}
+</style>
+
+
+<div class="alert alert-success style fixed_seq">
+	<strong>Sequence Name:</strong><%= @sequence.name %></label>
+	<%= link_to 'Add Steps', 'javascript:void(0)', :class => 'btn btn-primary pull-right show-steps-form' %>
+	<br/><br/>
+</div>
+
+<div class="well-small style add-steps">
+	<table class="table table-stripped">
+		<thead>
+			<th>Step#</th>
+			<th>Delay</th>
+			<th>Subject</th>
+			<th>Actions</th>
+		</thead>
+		<tbody class="step-body">
+			<% if @sequence.steps.present? %>
+				<% @steps = @sequence.steps.order("step_number ASC")%>
+				<% @steps && @steps.each do |step|%>
+				<tr>
+					<td><%=step.step_number%></td>
+					<% schedle = ""%>
+					<% if step.schedule == 0 %>
+						<td><%=step.delay.to_s + '-' + "Hours" || ""%></td>
+					<%elsif step.schedule == 1%>
+						<td><%=step.delay.to_s + '-' + "Days" || ""%></td>
+					<%elsif step.schedule == 2%>
+						<td><%=step.delay.to_s + '-' + "Weeks" || ""%></td>
+					<%elsif step.schedule == 3%>
+						<td><%=step.delay.to_s + '-' + "Months" || ""%></td>
+					<%else%>
+						<td><%= "Send Immediately" || ""%></td>
+					<% end %>
+					
+					<td><%=step.email.subject || ""%></td>
+					<td>
+					<!-- edit_step_path(step) -->
+						<%= link_to 'Edit','javascript:void(0)', :class => 'btn btn-primary btn-xs show-edit-steps-form', :id=>step.id %>
+		        		<%= link_to "Delete",step_path(step),
+		                        :method => :delete,
+		                        :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+		                        :class => 'btn btn-xs btn-danger' %>
+		            </td>            		
+				</tr>
+				<% end %>
+			<% end %>
+		</tbody>
+	</table>
+</div>
+
+
+<div class="well style step-form hidden">
+	<%= render 'step-form' %>
+	<br/>
+</div>

@@ -1,0 +1,117 @@
+<%= form_for @contact, :html => { :class => 'form-horizontal' } do |f| %>
+  <%#= f.error_notification %>
+  <% if @contact.errors.any? %>
+    <div id="errorExplanation" class="alert alert-error">
+      <a class="close" data-dismiss="alert">&#215;</a>
+      <h4><%= pluralize(@contact.errors.count, "error") %> prohibited this contact from being saved:</h4>
+      <ul>
+      <% @contact.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="">
+    <div class="form-group">
+      <%= f.label "First Name", :class => 'col-md-4 control-label' %>
+      <div class="col-md-4">
+        <%= f.text_field :first_name, class: "form-control" %>
+      </div>
+    </div> 
+    <div class="form-group">
+        <%= f.label "Last Name", :class => 'col-md-4 control-label' %>
+      <div class="col-md-4">
+        <%= f.text_field :last_name, class: "form-control" %>
+      </div>
+    </div>
+    <div class="form-group">
+        <%= f.label "Company", :class => 'col-md-4 control-label' %>
+      <div class="col-md-4">
+        <%= f.text_field :company, class: "form-control" %>
+      </div>
+    </div>
+    <div class="form-group">
+        <%= f.label "Website", :class => 'col-md-4 control-label' %>
+      <div class="col-md-4">
+        <%= f.text_field :website, class: "form-control" %>
+      </div>
+    </div>
+    <div class="form-group">
+        <%= f.label "Primary Email", :class => 'col-md-4 control-label' %>
+      <div class="col-md-4">
+        <%= f.text_field :primary_email, class: "form-control" %>
+      </div>
+    </div>
+    <div class="form-group">
+        <%= f.label "Email2", :class => 'col-md-4 control-label' %>
+      <div class="col-md-4">
+        <%= f.text_field :email2, class: "form-control" %>
+      </div>
+    </div>
+    <div class="form-group">
+        <%= f.label "Email3", :class => 'col-md-4 control-label' %>
+      <div class="col-md-4">
+        <%= f.text_field :email3, class: "form-control" %>
+      </div>
+    </div>
+    <div class="form-group">
+        <%= f.label "Email4", :class => 'col-md-4 control-label' %>
+      <div class="col-md-4">
+        <%= f.text_field :email4, class: "form-control" %>
+      </div>
+    </div>
+    <div class="form-group">
+        <%= f.label "Custom1", :class => 'col-md-4 control-label' %>
+      <div class="col-md-4">
+        <%= f.text_field :custom1, class: "form-control" %>
+      </div>
+    </div>
+    <div class="form-group">
+        <%= f.label "Custom2", :class => 'col-md-4 control-label' %>
+      <div class="col-md-4">
+        <%= f.text_field :custom2, class: "form-control" %>
+      </div>
+    </div>
+    <div class="form-group">
+        <%= f.label "Custom3", :class => 'col-md-4 control-label' %>
+      <div class="col-md-4">
+        <%= f.text_field :custom3, class: "form-control" %>
+      </div>
+    </div>
+  </div>
+  <div>
+    <% if @seq_memberships.present? %>
+      <div class="panel panel-info seq-membership-table">
+        <div class="panel-heading">Change Sequence Status</div>
+        <div class="panel-body">
+          <%= render "/sequencememberships/seq-membership" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <%# if @contact.new_record? %>
+  <div class="panel panel-info">
+    <div class="panel-heading">Choose Sequence and Step</div>
+    <div class="panel-body">
+      <div id="seq-id" class="form-group">
+        <%= f.label "Select Sequence:" , :class => 'col-md-4 control-label' %>
+          <div class="col-md-1">
+            <%= f.select :sequence_id ,options_for_select(current_user.account.sequences.map { |sq| ["#{sq.name}", sq.id] }),prompt: "Select Sequence", :class=>'form-control select-sequence' %>
+          </div>
+      </div>
+      <div id="step-id" class="hidden form-group">
+        <%= f.label "Select Step:" , :class => 'col-md-4 control-label' %>
+          <div class="col-md-1">
+            <%= f.select :step_id ,options_for_select(current_user.account.sequences.map { |sq| ["#{sq.name}", sq.id] }),prompt: "Select Step", :class=>'form-control' %>
+          </div>
+      </div>
+    </div>
+  </div>
+  <%# end %>
+  <div class="form-group">
+    <div class="col-sm-offset-4 col-sm-2">
+      <%= link_to "Cancel", contacts_path, :class=>"btn btn-default pull-right", :style=>"margin-left:2%;"%> 
+      <%= f.submit "Save",:class => 'btn btn-primary pull-right' %>
+    </div>
+  </div>
+<% end %>

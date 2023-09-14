@@ -1,0 +1,229 @@
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('#merge_button').popover('toggle')
+		// $(".submit-sequence").click(function(e){
+		$("body").on('click', '.submit-sequence', function(e){	
+	      var name = $("#sequence_name").val();
+	      var stop_toggle = $("#sequence_stop_toggle").val();
+	      $this = $(this);
+	      e.preventDefault();
+		  if(name!='')
+	      {
+		        $.ajax({
+	              type: 'get',
+	              url: '/sequences/add_sequence',
+	              dataType: 'script',
+	              data: {
+	                'name' : name,
+	                'toggle' : stop_toggle,
+	              },
+	              success: function (data) {
+	                $(".seq_form").addClass("hidden");
+	                $(".fixed_seq").removeClass("hidden");
+	                $("#sequence_id").val(data);
+	                $("#text_name").text(name);
+	              }
+	            });
+	      	}
+	      	else
+	      		{
+	      			alert("Please Fill all fields");
+	      		}
+		});
+
+		// $(".submit-sequence-step").click(function(e){
+		$(".submit-sequence-step").click(function(e){
+			// alert($("#option_toggle").val());
+			$('#merge_button').popover('hide')
+	      var id = $("#sequence_id").val();
+	      var subject = $("#step_subject").val();
+	      var step_id = $("#step_id").val();
+	      var delay = $("#step_delay").val();
+	      var type1 = $("#step_schedule").val();
+	      var body = $("#step_body").val();
+	      var option = $("#option_toggle").val();
+	      // alert(option);
+	      // alert(body);
+	      // var body = CKEDITOR.instances.step_body.getData();
+	      // alert(body);
+	      $this = $(this)
+	      e.preventDefault();
+		  if(subject != '' && body != '')
+	      {
+	        $.ajax({
+              type: 'get',
+              url: '/steps/add_step',
+              // dataType: 'json',
+              data: {
+                'id' : id,
+                'step_id' : step_id,
+                'subject' : subject,
+                'delay' : delay,
+                'type' : type1,
+                'option' : option,
+                'body' : body
+              },
+              success: function (data) {
+              	var schedule = "";
+              	if(data.schedule == 0)
+              	{
+              		schedule = "-Hours"; 
+              	}
+              	else if(data.schedule == 1)
+              	{
+              		schedule = "-Days";
+              	}
+              	else if(data.schedule == 2)
+              	{
+              		schedule = "-Weeks";
+              	}
+              	else if(data.schedule == 3)
+              	{
+              		schedule = "-Months";
+              	}
+              	else
+              	{
+              		data.delay = "";
+              		schedule = "Send Immediately";
+              	}
+				$(".step-body").append("<tr><td>"+ data.step_number +"</td><td>"+ data.delay + schedule +"</td><td>"+ subject +'</td><td><a href="javascript:void(0)" class="btn btn-primary btn-xs show-edit-steps-form" id='+data.id+'>Edit</a>' +" " +'<a href="/steps/'+ data.id +'" class="btn btn-danger btn-xs" data-method="delete">Delete</a></td></tr>');
+			   // $("#sequence-id").val('');
+		       $("#step_subject").val('');
+		       $("#step_delay").val('');
+		       $("#step_schedule").val('');
+		       $("#step_body").val('');
+		       // CKEDITOR.instances.step_body.setData('');
+		       $(".add-steps").removeClass("hidden");
+		       $(".send_immediately").addClass("hidden");
+		       // $(".send_immediately").val(false);
+		       $(".delay-dropdown").removeClass("hidden");
+		       $(".step-form").addClass("hidden");
+
+              }
+            });
+      	}else{
+        alert("Please Fill all fields");}
+		});
+
+
+		$(".show-steps-form").click(function(){
+
+			$(".step-form").removeClass("hidden");
+			editor.setValue("", true);
+		});
+
+		$("body").on('click', '.show-edit-steps-form', function(){
+			var id = $(this).attr('id');
+			$.ajax({
+              type: 'get',
+              url: '/steps/get_step',
+              dataType: 'json',
+              data: {
+                'id' :id
+              },
+              success: function (data) {
+              	// alert(data.step_number); && data.delay == 0
+              	if(data.step_number == 1)
+              	{
+              		$(".send_immediately").removeClass("hidden");
+              		if(data.delay != 0)
+              		{
+              			$("[name='step[send_option]']").bootstrapSwitch('state', false);
+              			$("#option_toggle").val("false");
+              			$(".delay-dropdown").removeClass("hidden");
+              		}
+              		else
+              		{
+              			$(".delay-dropdown").addClass("hidden");
+              		}
+              	}
+              	else
+              	{
+              		$(".send_immediately").addClass("hidden");
+              		$(".delay-dropdown").removeClass("hidden");
+              	}
+              	$.ajax({
+		              type: 'get',
+		              url: '/sequencememberships/get_email',
+		              dataType: 'json',
+		              data: {
+		                'id' : data.id
+		              },
+		              success: function (email_data) {
+              		   $(".step-form").removeClass("hidden");
+				       $("#step_subject").val(email_data.subject);
+				       // $("#step_body").val(email_data.body);
+				       editor.setValue(email_data.body, true);
+				       // CKEDITOR.instances.step_body.setData(email_data.body);
+				       $("#step_delay").val(data.delay);
+				       $("#step_schedule").val(data.schedule);
+				       $("#sequence_id").val(data.sequence_id);
+				       $("#step_id").val(data.id);
+	              	}	
+	            });
+              	// alert(data.email.subject);
+			  
+		       // $("#step_body").val(data.email.body);
+              }
+            });
+		});
+
+		$(".close-step-form").click(function(){
+			$("#step_subject").val('');
+	       // $("#step_body").val(email_data.body);
+	        // CKEDITOR.instances.step_body.setData();
+	        $("#step_delay").val('');
+	        $("#step_schedule").val('');
+	        // $("#sequence_id").val('');
+	        $("#step_id").val('');	
+	        // $(".delay_error").parents('.control-group').removeClass('error');
+            // $(".delay_error").text("");
+            // $(".submit-sequence-step").removeClass("disabled");	
+            // $(".send_immediately").addClass("hidden");
+            // $(".send_immediately").val(false);
+			// $(".delay-dropdown").removeClass("hidden");	
+			$(".step-form").addClass("hidden");	
+			$(".send_immediately").addClass("hidden");
+            $(".delay-dropdown").removeClass("hidden");
+		});
+	});	
+
+</script>
+
+<div class="span7 offset2">
+	<!-- <div class=" well seq_form">
+	<h3>New Sequence</h3>
+		<%#= render 'form' %>
+		<br/>
+	</div> -->
+	<div class="panel panel-success seq_form">
+		<div class="panel-heading">New Sequence</div>
+		<div class="panel-body">
+			<%= render 'form' %>
+		</div>
+	</div>
+	<div class="alert alert-success hidden fixed_seq">
+		<strong>Sequence Name:</strong><label id="text_name"></label>
+		<%= link_to 'Add Steps', 'javascript:void(0)', :class => 'btn btn-primary pull-right show-steps-form' %>
+		<br/><br/>
+	</div>
+
+	<div class="style hidden add-steps">
+		<table class="table table-stripped">
+			<thead>
+				<th>Step#</th>
+				<th>Delay</th>
+				<th>Subject</th>
+				<th>Actions</th>
+			</thead>
+			<tbody class="step-body">
+			</tbody>
+		</table>
+	</div>
+
+
+	<div class="well well-lg step-form hidden">
+		<%= render 'step-form' %>
+		<br/>
+	</div>
+</div>

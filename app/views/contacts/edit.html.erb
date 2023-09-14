@@ -1,0 +1,84 @@
+<script type="text/javascript">
+	$(document).ready(function(){
+		// $("select#contact_sequence_id").change(function(){
+		// 	var seq_id = $("#contact_sequence_id").val()
+		// 	$.ajax({
+  //             type: 'get',
+  //             url: '/sequencememberships/get_step',
+  //             dataType: 'json',
+  //             data: {
+  //               'id' : seq_id
+  //             },
+  //             success: function (data) {
+		// 		$("#step-id").removeClass("hidden");
+		// 		$("select#contact_step_id option").remove();
+  //               //put in a empty default line
+  //               var row = "<option value=\"" + "" + "\">" + "Select Step" + "</option>";
+  //               $(row).appendTo("select#contact_step_id");                       
+  //               // Fill sub category select 
+  //               $.each(data, function(i, j){
+  //               	   $.ajax({
+		// 	              type: 'get',
+		// 	              url: '/sequencememberships/get_email',
+		// 	              dataType: 'json',
+		// 	              data: {
+		// 	                'id' : j.id
+		// 	              },
+		// 	              success: function (email_data) {
+
+		// 	              	 row = "<option value=\"" + j.id + "\">" + j.step_number+"-" +email_data.subject + "</option>";   
+  //                   		 $(row).appendTo("select#contact_step_id");
+							                  
+		// 	              }
+		// 	        });
+                                        
+  //               });
+  //             }
+  //           });
+		// });
+
+		$("select#contact_sequence_id").change(function()
+		 {
+			var seq_id = $("#contact_sequence_id").val()
+			if(seq_id !='')
+			{
+				$.ajax({
+	              type: 'get',
+	              url: '/sequencememberships/get_step',
+	              dataType: 'json',
+	              data: {
+	                'id' : seq_id
+	              },
+	              success: function (data) {
+					$("#step-id").removeClass("hidden");
+					$("select#contact_step_id option").remove();
+	                //put in a empty default line
+	                var row = "<option value=\"" + "" + "\">" + "Select Step" + "</option>";
+	                $(row).appendTo("select#contact_step_id");                       
+
+	                $.each(data, function(i, j){
+		                row = "<option value=\"" + j.id + "\">" + j.step_number+"-" + j.email_subject + "</option>";   
+		                $(row).appendTo("select#contact_step_id");
+	                });
+	              }
+	            });
+	        }
+	        else
+	        {
+	        	$("#step-id").addClass("hidden");
+	        	// $(".submit-button").addClass("hidden");
+	        }
+		});
+	});
+</script>
+<!-- <h3>Edit Contact</h3>
+<div class="span6">	
+	<%#= render 'form' %>
+</div> -->
+
+<div class="panel panel-success">
+	<div class="panel-heading">Edit Contact</div>
+	<div class="panel-body">
+		<%= render 'form' %>
+	</div>
+</div>

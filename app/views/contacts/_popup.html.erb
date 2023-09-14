@@ -1,0 +1,42 @@
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="margin-top:-5%;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Contact Details</h4>
+        </div>
+        
+        <div class="modal-body">
+            <table class="table table-striped">
+                <tr class="active"><td ><strong>First Name</strong></td>
+                <td><%= @contact.first_name %></td></tr>
+                <tr class="success"><td ><strong>Last Name</strong></td>
+                <td><%= @contact.last_name %></td></tr>
+                <tr class="active"><td ><strong>Email</strong></td>
+                <td><%= @contact.primary_email %></td></tr>
+                <tr class="success"><td ><strong>Company</strong></td>
+                <td><%= @contact.company %></td></tr>
+                <tr class="active"><td ><strong>Website</strong></td>
+                <td><%= @contact.website %></td></tr>
+                <tr class="success"><td ><strong>Email 2</strong></td>
+                <td><%= @contact.email2 %></td></tr>
+                <tr class="active"><td ><strong>Email 3</strong></td>
+                <td><%= @contact.email3 %></td></tr>
+                <tr class="success"><td ><strong>Email 4</strong></td>
+                <td><%= @contact.email4 %></td></tr>
+                <tr class="active"><td ><strong>Custom 1</strong></td>
+                <td><%= @contact.custom1 %></td></tr>
+                <tr class="success"><td ><strong>Custom 2</strong></td>
+                <td><%= @contact.custom2 %></td></tr>
+                <tr class="active"><td ><strong>Custom 3</strong></td>
+                <td><%= @contact.custom3 %></td></tr> 
+            </table>          
+        </div>
+        <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+        </div>
+        
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+ 

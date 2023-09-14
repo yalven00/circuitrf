@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  email_id: 1
+  sequence_id: 1
+  step_id: 1
+  status: MyString
+  response: MyText
+  date: 2014-05-17 15:58:59
+
+two:
+  email_id: 1
+  sequence_id: 1
+  step_id: 1
+  status: MyString
+  response: MyText
+  date: 2014-05-17 15:58:59

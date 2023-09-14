@@ -1,0 +1,64 @@
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('#contacts').dataTable();
+  });
+</script>
+<div id="settings_wrapper">
+</div>
+<%- model_class = Contact -%>
+<div class="alert alert-info">
+  <h3><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h3>
+</div>
+<% if @contacts.first.present? %>
+<%#= will_paginate @contacts, previous_label: h("< Prev  "), next_label: h("  Next >") %>
+<div class="well">
+<table id="contacts" class="table table-striped">
+  <thead style="background-color: lightgrey;">
+    <tr>
+      <th><%= model_class.human_attribute_name(:name) %></th>
+      <th><%= model_class.human_attribute_name(:email) %></th>
+      <th>Next Email</th>
+      <th>Date</th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @contacts.each do |contact| %>
+      <tr>
+        <!-- <td><%#= link_to author_book.id, author_book_path(author_book) %></td> -->
+        <td><%= contact.first_name %></td>
+        <td><%= contact.primary_email %></td>
+        <% next_email = contact.queued.nextemails.first %>
+        <%if next_email.present? && next_email.status!="canceled"%>
+        <td><%= Sequence.where(:id => next_email.sequence_id).first.try(:name) || "" %>,
+             <%= Step.where(:id => next_email.step_id).first.try(:step_number) || ""%>,
+             <%= Email.where(:id => next_email.email_id).first.try(:subject) || ""%>
+        </td>
+        <td><%=next_email.date.strftime("%m-%d-%Y") || ""%></td>
+        <% else %>
+        <td>""</td>
+        <td>""</td>
+        <% end %>
+        <td>
+        <%#= link_to 'Sequence Memberships',sequencememberships_path({id: contact.id}), :class => 'btn btn-u-small btn-primary btn-mini' %>
+        <%= link_to 'View',contact_path(contact), :class => 'btn btn-success btn-xs', remote: true %>
+        <%= link_to 'Edit',edit_contact_path(contact), :class => 'btn btn-warning btn-xs' %>
+        <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                        contact_path(contact),
+                        :method => :delete,
+                        :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                        :class => 'btn btn-xs btn-danger' %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+<% else %>
+  <div class="alert alert-info">No Contacts available.</div>
+<% end %>
+</div>
+<%= link_to 'Add Contact', new_contact_path, :class => 'btn btn-primary' %>
+
+
+ 

@@ -1,0 +1,2 @@
+module SmtpsettingsHelper
+end

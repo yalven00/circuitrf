@@ -1,0 +1,103 @@
+<script type="text/javascript">
+  $(document).ready(function () {
+
+    /////////////// card validation scripy here /////////////////////
+      $("#validate-and-submit-card-info").click(function(){
+      // alert($('.card_number').val());
+        $('#validate-and-submit-card-info').attr('disabled', true);
+        Stripe.setPublishableKey('pk_test_e3M34Kpc9t0NSIJESv7IYGxQ');
+
+        Stripe.card.createToken({
+            number: $('.card_number').val(),
+            cvc: $('.card-cvc').val(),
+            exp_month: $('#card_month').val(),
+            // exp_month: '12',
+            exp_year: $('#card_year').val()
+        }, stripeResponseHandler);
+        return false;
+     });
+
+    function stripeResponseHandler(status, response) {
+      if (response.error) {
+         alert(response.error.message);
+         $('#validate-and-submit-card-info').attr('disabled', false);
+      } else {
+          var form$ = $(".info-submission-form");
+          var token = response['id'];
+          form$.append($('<input type="hidden" name="billingsubscription[token]" />').val(token));
+          form$.submit();
+        }
+    }
+    // ///////////// end of stripe verification code //////////////
+
+    // $("#c-infos").hide();
+    // $("#card-info-div").hide();
+    // $("#plan-info-div").hide();
+
+    // $("#show-cardinfo-div").click(function(){
+    //   $("#c-infos").show();
+    //   $("#choose-plan-div").hide();
+    //   $("#card-info-div").show();
+    //   $("#plan-info-div").hide();
+    // });
+
+    // $("#back-to-plans").click(function(){
+    //   $("#c-infos").hide();
+    //   $("#choose-plan-div").show();
+    //   $("#card-info-div").hide();
+    //   $("#plan-info-div").show();
+    // });
+
+  }); /// end of doc ready
+</script>
+
+<!-- =============== webhook url ============================ -->
+
+
+<div id="plan-info-div" class="page-header alert alert-success">
+  <h3>Credit Card Informations.</h3>
+</div>
+
+
+<%= form_for @Billingsubscription, :html => { :class => 'form-horizontal info-submission-form' } do |f| %>
+
+  <!-- <div id="c-infos">  -->
+  <!-- <h4 class="alert alert-info">Enter card info.</h4> -->
+      <%= hidden_field_tag :plan_id, @constant_plan.id %>
+      <div class="control-group">
+        <%= f.label :card_number, :class => 'control-label' %>
+        <div class="controls">
+          <% if !@Billingsubscription.new_record? %>
+            <% last_four = "************#{@Billingsubscription.card_number}" %>
+            <%= f.text_field :card_number,:value=>last_four,:class=>"card_number" %>
+          <% else %>
+            <%= f.text_field :card_number,:class=>"card_number" %>
+          <% end %>
+        </div>
+      </div>
+      <div class="control-group">
+        <%= f.label :card_code, :class => 'control-label' %>
+        <div class="controls">
+          <%= f.text_field :card_code,:class=>"card-cvc" %>
+        </div>
+      </div>
+      <div class="control-group">
+          <%= label_tag :card_exp_date, "Card Expiration", :class => 'card_exp_date control-label' %>
+        <div class="controls">
+          <%= select_month nil, {add_month_numbers_true: true}, {name: nil, id: "card_month", style: "width: 55%;"}%>
+          <%= select_year nil, {start_year: Date.today.year, end_year: Date.today.year+15}, {name: nil, id: "card_year", style: "width: 42%;"}%>
+        </div>
+      </div>
+
+
+    <div class="form-actions">
+      <!-- <input type="button"  class = 'btn btn-warning' value="Go Back" id="back-to-plans"> -->
+      <input type="button"  class = 'btn btn-primary ' value="Submit" id="validate-and-submit-card-info">
+      <%#= f.button :submit, :class => 'btn btn-primary' %>
+      <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                  plans_path, :class => 'btn' %>
+    </div>
+  </div>
+<% end %>
+
+</div>
